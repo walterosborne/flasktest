@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Flask App</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <h1 id="heading">Original Heading</h1>
+    <button id="changeStyleButton">Change Heading Style</button>
+
+    <script>
+        $(document).ready(function () {
+            $('#changeStyleButton').click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/change_style",
+                    success: function (response) {
+                        // Apply each style property from the response to the heading
+                        $('#heading').css({
+                            "color": response.color,
+                            "font-size": response.fontSize,
+                            "font-weight": response.fontWeight
+                        });
+                        // Start checking for style updates
+                        checkForStyleUpdates();
+                    }
+                });
+            });
+
+            function checkForStyleUpdates() {
+                setTimeout(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: "/get_current_style",
+                        success: function (response) {
+                            // Apply each style property from the response to the heading
+                            $('#heading').css({
+                                "color": response.color,
+                                "font-size": response.fontSize,
+                                "font-weight": response.fontWeight
+                            });
+                        }
+                    });
+                }, 3000); // Check for updates every 3 seconds
+            }
+        });
+    </script>
+</body>
+
+</html>
